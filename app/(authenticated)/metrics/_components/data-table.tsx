@@ -1,12 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
-import { columns } from "@/app/metrics/_components/columns";
 
 import {
   Table,
@@ -16,24 +15,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
 import { Metric } from "@/types";
+import { columns } from "@/app/(authenticated)/metrics/_components/columns";
 
 interface DataTableProps<TData extends Metric> {
-  data: TData[];
+  data: { allMetrics: TData[]; totalPages: number };
 }
 
 export function DataTable<TData extends Metric>({
   data,
 }: DataTableProps<TData>) {
-  const [metricData] = useState<TData[]>(data);
+  const [metricData, setMetricData] = useState<TData[]>(data.allMetrics);
 
-  // Now useReactTable expects `TData` as a type for columns and data
   const table = useReactTable<TData>({
     data: metricData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  useEffect(() => {
+    setMetricData(data.allMetrics);
+  }, [data.allMetrics]);
 
   return (
     <div>

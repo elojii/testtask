@@ -19,6 +19,7 @@ export const addMetric = async ({
       name,
     }),
   });
+
   if (!response.ok) {
     const errorDetails = await response.json();
     throw new Error(errorDetails.message || "An error occurred");

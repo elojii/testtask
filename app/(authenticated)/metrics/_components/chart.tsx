@@ -27,11 +27,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface ChartMetricsProps {
-  data: Metric[];
+  data: { allMetrics: Metric[]; totalPages: number };
 }
 
 export function ChartMetrics({ data }: ChartMetricsProps) {
-  const chartData = data.map((item) => ({
+  const chartData = data.allMetrics.map((item) => ({
     name: item.name,
     value: parseFloat(item.value),
   }));

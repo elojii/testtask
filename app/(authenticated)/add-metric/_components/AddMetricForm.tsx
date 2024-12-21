@@ -1,22 +1,27 @@
 "use client";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
+import { config } from "@/appconfig";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { addMetric } from "../_utils/addMetric";
-import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import { addMetric } from "../_utils/addMetric";
 import { SharpLoader } from "@/app/_components";
 import { useMutation } from "@tanstack/react-query";
 
 export const AddMetricForm = () => {
+  const router = useRouter();
+
   const addMetricMutation = useMutation({
     mutationFn: addMetric,
     onSuccess: () => {
       toast.success("Metric added successfully!");
+      router.push(`${config.frontendUrl}/metrics`);
     },
 
-    onError: () => {
-      toast.error("Something went wrong!");
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong!");
     },
   });
 
@@ -28,7 +33,11 @@ export const AddMetricForm = () => {
     const value = formData.get("value") as string;
     const name = formData.get("name") as string;
 
-    addMetricMutation.mutate({ category, value: Number(value), name });
+    addMetricMutation.mutate({
+      category: category.toString(),
+      value: Number(value),
+      name,
+    });
   };
 
   return (

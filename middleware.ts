@@ -1,6 +1,18 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default clerkMiddleware();
+import { config as appconfig } from "@/appconfig";
+
+const isProtectedRoute = createRouteMatcher(["/metrics", "/add-metric"]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect();
+
+  if (req.nextUrl.pathname === "/") {
+    console.log("Redirecting from / to /metrics");
+    return NextResponse.redirect(`${appconfig.frontendUrl}/metrics`);
+  }
+});
 
 export const config = {
   matcher: [

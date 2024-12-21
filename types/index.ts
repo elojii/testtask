@@ -6,8 +6,8 @@ export type Metric = {
   date: Date;
 };
 
-export type ResponseTypeHelper = {
+export type ResponseTypeHelper<T> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  data: T;
   error: string;
 };

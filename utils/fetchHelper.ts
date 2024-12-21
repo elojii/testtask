@@ -8,6 +8,8 @@ export async function fetchHelper<ResponseType = object>(
     ...{ ...options, body: JSON.stringify(options.body) },
   };
 
+  console.log('url', url);
+
   const response = await fetch(url, configuredOptions);
 
   if (!response.ok) {

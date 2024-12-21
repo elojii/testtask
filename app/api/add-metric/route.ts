@@ -5,7 +5,10 @@ import { z } from "zod";
 const metricSchema = z.object({
   value: z.number().min(0, { message: "Value must be a positive number" }),
   name: z.string().min(1, { message: "Name is required" }),
-  category: z.string().min(1, { message: "Category is required" }),
+  category: z.string().refine(
+    (value) => isNaN(Number(value)), // Ensure it's not a number
+    { message: "Category cannot be numeric" }
+  ),
 });
 
 export async function POST(req: Request) {
@@ -16,7 +19,7 @@ export async function POST(req: Request) {
     const { value, name, category } = parsedBody;
 
     await metrics.addMetrics({ category, name, value });
-    
+
     return NextResponse.json(
       { data: "Successfully added a metric!" },
       { status: 200 }

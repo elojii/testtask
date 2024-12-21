@@ -1,8 +1,17 @@
 import prisma from "@/db";
 
-const getAllMetrics = async () => {
+const getAllMetric = async ({
+  page,
+  takePerPage,
+}: {
+  page: number;
+  takePerPage: number;
+}) => {
   try {
-    return await prisma.metric.findMany();
+    return await prisma.metric.findMany({
+      skip: (page - 1) * takePerPage,
+      take: takePerPage,
+    });
   } catch (error) {
     console.error(error);
   }
@@ -31,7 +40,12 @@ const addMetrics = async ({
   }
 };
 
+const countAll = async () => {
+  return await prisma.metric.count();
+};
+
 export const metrics = {
-  getAllMetrics,
+  getAllMetric,
   addMetrics,
+  countAll,
 };
